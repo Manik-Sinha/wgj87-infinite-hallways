@@ -152,6 +152,7 @@ while not quit:
         up = True
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
         down = True
+    #Mute 
     if keys[pygame.K_m]:
         pygame.key.set_repeat()
         if options["mute"] == False:
