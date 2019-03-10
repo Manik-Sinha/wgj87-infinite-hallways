@@ -15,7 +15,6 @@ pygame.mixer.init()
 options = {
     'mute': False
 }
-
 class Bullet:
     def __init__(self):
         self.x = -1
@@ -82,8 +81,7 @@ class Player:
                 y = self.turret_end[1]
                 vx = self.turret_vector.x
                 vy = self.turret_vector.y
-                if not options['mute']:
-                    self.sound_pew.play()
+                self.sound_pew.play()
                 bullet.fire(x, y, vx, vy)
                 self.next_bullet = (self.next_bullet + 1) % len(self.bullets)
                 self.fire_timer = self.fire_rate
@@ -154,6 +152,16 @@ while not quit:
         up = True
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
         down = True
+    if keys[pygame.K_m]:
+        pygame.key.set_repeat()
+        if options["mute"] == False:
+            options["mute"] = True
+        elif options["mute"] == True:
+            options["mute"] = False
+    if options["mute"] == True:
+        pygame.mixer.pause()
+    elif options["mute"] == False:
+        pygame.mixer.unpause()
 
     player.update(up, down, left, right, dt, pygame.mouse.get_pos(), mouse_buttons)
 
@@ -162,3 +170,5 @@ while not quit:
     screen.fill((0, 0, 0))
     player.draw(screen)
     pygame.display.update()
+
+
