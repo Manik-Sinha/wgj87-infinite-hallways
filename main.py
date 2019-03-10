@@ -6,12 +6,19 @@ size = width, height = 960, 540
 
 screen = pygame.display.set_mode(size)
 
+pygame.mixer.init(22100, -16, 2, 64)
+
+#if pygame.mixer.get_init() is None:
+#    print("could not initialize sound")
+#    sys.exit()
+
+
 class Bullet:
     def __init__(self):
         self.x = -1
         self.y = -1
         self.s = 5
-        self.speed = 300
+        self.speed = 500
         self.vx = -1
         self.vy = -1
         self.alive = False
@@ -48,6 +55,7 @@ class Player:
         self.fire_rate = 0.5
         self.fired_bullet = False
         self.fire_timer = 0
+        self.sound_pew = pygame.mixer.Sound("pew.wav")
     def draw(self, surface):
         #Draw body.
         rect = (self.x - self.w / 2.0, self.y - self.h / 2.0, self.w, self.h)
@@ -71,6 +79,7 @@ class Player:
                 y = self.turret_end[1]
                 vx = self.turret_vector.x
                 vy = self.turret_vector.y
+                self.sound_pew.play()
                 bullet.fire(x, y, vx, vy)
                 self.next_bullet = (self.next_bullet + 1) % len(self.bullets)
                 self.fire_timer = self.fire_rate
