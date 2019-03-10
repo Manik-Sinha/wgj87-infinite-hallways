@@ -8,6 +8,8 @@ screen = pygame.display.set_mode(size)
 
 pygame.mixer.init()
 
+music = pygame.mixer.Sound("monaco.ogg")
+music.play()
 #if pygame.mixer.get_init() is None:
 #    print("could not initialize sound")
 #    sys.exit()
@@ -152,7 +154,6 @@ while not quit:
         up = True
     if keys[pygame.K_DOWN] or keys[pygame.K_s]:
         down = True
-    #Mute 
     if keys[pygame.K_m]:
         pygame.key.set_repeat()
         if options["mute"] == False:
@@ -163,7 +164,6 @@ while not quit:
         pygame.mixer.pause()
     elif options["mute"] == False:
         pygame.mixer.unpause()
-
     player.update(up, down, left, right, dt, pygame.mouse.get_pos(), mouse_buttons)
 
     left = right = up = down = False
