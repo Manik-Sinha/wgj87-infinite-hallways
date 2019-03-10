@@ -6,12 +6,15 @@ size = width, height = 960, 540
 
 screen = pygame.display.set_mode(size)
 
-pygame.mixer.init(22100, -16, 2, 64)
+pygame.mixer.init()
 
 #if pygame.mixer.get_init() is None:
 #    print("could not initialize sound")
 #    sys.exit()
 
+options = {
+    'mute': False
+}
 
 class Bullet:
     def __init__(self):
@@ -79,7 +82,8 @@ class Player:
                 y = self.turret_end[1]
                 vx = self.turret_vector.x
                 vy = self.turret_vector.y
-                self.sound_pew.play()
+                if not options['mute']:
+                    self.sound_pew.play()
                 bullet.fire(x, y, vx, vy)
                 self.next_bullet = (self.next_bullet + 1) % len(self.bullets)
                 self.fire_timer = self.fire_rate
