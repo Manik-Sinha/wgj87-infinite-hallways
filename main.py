@@ -27,12 +27,19 @@ class Bullet:
         self.vx = -1
         self.vy = -1
         self.alive = False
-    def update(self, dt):
+    def update(self, dt, targetlist):
         if self.alive:
             self.x = self.x + self.vx * self.speed * dt
             self.y = self.y - self.vy * self.speed * dt
             if self.x < 0 or self.x > width or self.y < 0 or self.y > height:
                 self.kill()
+            rect = pygame.Rect(self.x - self.s / 2.0, self.y - self.s / 2.0, self.s, self.s)
+            for target in targetlist:
+                targetrect = pygame.Rect(target.get_rect())
+                if rect.colliderect(targetrect):
+                    target.takedamage(1)
+                    self.kill()
+                    return
     def draw(self, surface):
         rect = (self.x - self.s / 2.0, self.y - self.s / 2.0, self.s, self.s)
         pygame.draw.rect(surface, (255, 0, 0), rect)
@@ -74,7 +81,7 @@ class Player:
         for bullet in self.bullets:
             if bullet.alive:
                 bullet.draw(surface)
-    def update(self, up, down, left, right, dt, mouse_position, mouse_buttons):
+    def update(self, up, down, left, right, dt, mouse_position, mouse_buttons, enemylist):
         self.move(up, down, left, right, dt)
         self.update_turret(mouse_position)
         left_mouse_button = mouse_buttons[0]
@@ -92,7 +99,7 @@ class Player:
                 self.fired_bullet = True
         for bullet in self.bullets:
             if bullet.alive:
-                bullet.update(dt)
+                bullet.update(dt, enemylist)
         if self.fired_bullet:
             self.fire_timer -= dt
     def move(self, up, down, left, right, dt):
@@ -116,6 +123,11 @@ class Player:
         vector = self.turret_vector
         length = self.turret_length
         self.turret_end = (self.x + vector.x * length, self.y - vector.y * length)
+    def takedamage(self, amount):
+        self.hp -= amount
+        print("player hp: " + str(self.hp))
+    def get_rect(self):
+        return (self.x - self.w / 2.0, self.y - self.h / 2.0, self.w, self.h)
 class Enemy:
     sqrt2 = math.sqrt(2)
     def __init__(self):
@@ -145,24 +157,25 @@ class Enemy:
         for bullet in self.bullets:
             if bullet.alive:
                 bullet.draw(surface)
-    def update(self, player_x, player_y, dt):
+    def update(self, player_x, player_y, dt, playerlist):
         self.update_turret(player_x, player_y)
-        self.fire(dt)
-    def fire(self, dt):
-        bullet = self.bullets[self.next_bullet]
-        if not bullet.alive:
-            x = self.turret_end[0]
-            y = self.turret_end[1]
-            vx = self.turret_vector.x
-            vy = self.turret_vector.y
-            #self.sound_pew.play()
-            bullet.fire(x, y, vx, vy)
-            self.next_bullet = (self.next_bullet + 1) % len(self.bullets)
-            self.fire_timer = self.fire_rate
-            self.fired_bullet = True
+        self.fire(dt, playerlist)
+    def fire(self, dt, playerlist):
+        if self.fire_timer <= 0:
+            bullet = self.bullets[self.next_bullet]
+            if not bullet.alive:
+                x = self.turret_end[0]
+                y = self.turret_end[1]
+                vx = self.turret_vector.x
+                vy = self.turret_vector.y
+                #self.sound_pew.play()
+                bullet.fire(x, y, vx, vy)
+                self.next_bullet = (self.next_bullet + 1) % len(self.bullets)
+                self.fire_timer = self.fire_rate
+                self.fired_bullet = True
         for bullet in self.bullets:
             if bullet.alive:
-                bullet.update(dt)
+                bullet.update(dt, playerlist)
         if self.fired_bullet:
             self.fire_timer -= dt
     def update_turret(self, player_x, player_y):
@@ -174,6 +187,11 @@ class Enemy:
         vector = self.turret_vector
         length = self.turret_length
         self.turret_end = (self.x + vector.x * length, self.y - vector.y * length)
+    def takedamage(self, amount):
+        self.hp -= amount
+        print("enemy hp: " + str(self.hp))
+    def get_rect(self):
+        return (self.x - self.w / 2.0, self.y - self.h / 2.0, self.w, self.h)
 
 player = Player()
 enemy1 = Enemy()
@@ -225,9 +243,9 @@ while not quit:
     elif options["mute"] == False:
         pygame.mixer.unpause()
 
-    player.update(up, down, left, right, dt, pygame.mouse.get_pos(), mouse_buttons)
+    player.update(up, down, left, right, dt, pygame.mouse.get_pos(), mouse_buttons, [enemy1])
     #enemy1.update_turret(player.x, player.y)
-    enemy1.update(player.x, player.y, dt)
+    enemy1.update(player.x, player.y, dt, [player])
     left = right = up = down = False
 
     screen.fill((0, 0, 0))
