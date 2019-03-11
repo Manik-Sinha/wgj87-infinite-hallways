@@ -115,14 +115,14 @@ class Player:
         self.turret_vector.normalize_ip()
         vector = self.turret_vector
         length = self.turret_length
-        self.turret_end = (self.x + vector.x * length, self.y - vector.y * length
+        self.turret_end = (self.x + vector.x * length, self.y - vector.y * length)
 class Enemy:
     sqrt2 = math.sqrt(2)
     def __init__(self):
         self.hp = 5
         self.x = self.y = self.w = self.h = 40
-        self.mx = self.x
-        self.my = self.y
+        self.player_x = self.x
+        self.player_y = self.y
         self.speed = 200
         self.turret_vector = pygame.math.Vector2(0, 0)
         self.turret_length = self.w * 1.5
@@ -145,43 +145,31 @@ class Enemy:
         for bullet in self.bullets:
             if bullet.alive:
                 bullet.draw(surface)
-    def update(self, up, down, left, right, dt, fire, x, y):
-        self.move(up, down, left, right, dt)
-        self.update_turret(x, y)
-        if (fire == True):
-            ebullet = self.bullets[self.next_bullet]
-            if not ebullet.alive:
-                x = self.turret_end[0]
-                y = self.turret_end[1]
-                vx = self.turret_vector.x
-                vy = self.turret_vector.y
-                self.sound_pew.play()
-                ebullet.fire(x, y, vx, vy)
-                self.next_bullet = (self.next_bullet + 1) % len(self.bullets)
-                self.fire_timer = self.fire_rate
-                self.fired_bullet = True
-        for ebullet in self.bullets:
-            if ebullet.alive:
-                ebullet.update(dt)
+    def update(self, player_x, player_y, dt):
+        self.update_turret(player_x, player_y)
+        self.fire(dt)
+    def fire(self, dt):
+        bullet = self.bullets[self.next_bullet]
+        if not bullet.alive:
+            x = self.turret_end[0]
+            y = self.turret_end[1]
+            vx = self.turret_vector.x
+            vy = self.turret_vector.y
+            #self.sound_pew.play()
+            bullet.fire(x, y, vx, vy)
+            self.next_bullet = (self.next_bullet + 1) % len(self.bullets)
+            self.fire_timer = self.fire_rate
+            self.fired_bullet = True
+        for bullet in self.bullets:
+            if bullet.alive:
+                bullet.update(dt)
         if self.fired_bullet:
             self.fire_timer -= dt
-    def move(self, up, down, left, right, dt):
-        speed = self.speed
-        if (left and up) or (left and down) or (right and up) or (right and down):
-            speed = self.speed / self.sqrt2
-        if left:
-            self.x = self.x - speed * dt
-        if right:
-            self.x = self.x + speed * dt
-        if up:
-            self.y = self.y - speed * dt
-        if down:
-            self.y = self.y + speed * dt
-    def update_turret(self,x, y):
-        self.mx = x
-        self.my = y
-        self.turret_vector.x = self.mx - self.x
-        self.turret_vector.y = self.y - self.my
+    def update_turret(self, player_x, player_y):
+        self.player_x = player_x
+        self.player_y = player_y
+        self.turret_vector.x = self.player_x - self.x
+        self.turret_vector.y = self.y - self.player_y
         self.turret_vector.normalize_ip()
         vector = self.turret_vector
         length = self.turret_length
@@ -239,12 +227,10 @@ while not quit:
 
     player.update(up, down, left, right, dt, pygame.mouse.get_pos(), mouse_buttons)
     #enemy1.update_turret(player.x, player.y)
-    enemy1.update(0, 0, 0, 0, 0, True, player.x, player.y)
+    enemy1.update(player.x, player.y, dt)
     left = right = up = down = False
 
     screen.fill((0, 0, 0))
     player.draw(screen)
     enemy1.draw(screen)
     pygame.display.update()
-
-
