@@ -1,5 +1,8 @@
 import pygame, math
 from bullet import Bullet
+from types import MethodType
+import random
+
 class Enemy:
     sqrt2 = math.sqrt(2)
     def __init__(self):
@@ -17,6 +20,7 @@ class Enemy:
         self.fire_rate = 0.5
         self.fire_timer = 0
         self.sound_pew = pygame.mixer.Sound("pew.wav")
+        self.move_function = MethodType(move_wacky(), self)
     def draw(self, surface):
         #Draw body.
         rect = (self.x - self.w / 2.0, self.y - self.h / 2.0, self.w, self.h)
@@ -30,6 +34,7 @@ class Enemy:
             if bullet.alive:
                 bullet.draw(surface)
     def update(self, player_x, player_y, dt, playerlist):
+        self.move_function(dt, player_x, player_y)
         self.update_turret(player_x, player_y)
         self.fire(dt, playerlist)
     def fire(self, dt, playerlist):
@@ -64,3 +69,39 @@ class Enemy:
         print("enemy hp: " + str(self.hp))
     def get_rect(self):
         return (self.x - self.w / 2.0, self.y - self.h / 2.0, self.w, self.h)
+
+import globals
+def move_wacky():
+    directions = [(0, 1),(1, 0),(1, 1),(-1, -1),(-1, 0),(0, -1),(1, -1),(-1, 1)]
+    direction = random.choice(directions)
+    countdown = 1
+    def move(self, dt, player_x, player_y):
+        original_x = self.x
+        original_y = self.y
+        nonlocal direction
+        nonlocal countdown
+        countdown -= dt
+        self.x = self.x + direction[0] * self.speed * dt
+        self.y = self.y + direction[1] * self.speed * dt
+        if self.x - self.w / 2.0 < 0:
+            self.x = self.w
+            direction = random.choice(directions)
+            countdown = 2
+        elif self.x + self.w / 2.0 > globals.width - 1:
+            self.x = globals.width - self.w / 2.0 - 1
+            #self.x = globals.width - self.w
+            direction = random.choice(directions)
+            countdown = 2
+        if self.y - self.h / 2.0 < 0:
+            self.y = self.h
+            direction = random.choice(directions)
+            countdown = 2
+        elif self.y + self.h / 2.0 > globals.height - 1:
+            self.y = globals.height - self.h / 2.0 - 1
+            #self.y = globals.height - self.h
+            direction = random.choice(directions)
+            countdown = 2
+        if countdown <= 0:
+            direction = random.choice(directions)
+            countdown = 2
+    return move

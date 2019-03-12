@@ -1,5 +1,6 @@
 import pygame, math
 from bullet import Bullet
+import globals
 class Player:
     sqrt2 = math.sqrt(2)
     def __init__(self):
