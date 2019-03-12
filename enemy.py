@@ -46,7 +46,7 @@ class Enemy:
                 y = self.turret_end[1]
                 vx = self.turret_vector.x
                 vy = self.turret_vector.y
-                #self.sound_pew.play()
+                self.sound_pew.play()
                 bullet.fire(x, y, vx, vy)
                 self.next_bullet = (self.next_bullet + 1) % len(self.bullets)
                 self.fire_timer = self.fire_rate
@@ -74,6 +74,7 @@ class Enemy:
         return (self.x - self.w / 2.0, self.y - self.h / 2.0, self.w, self.h)
 
 import globals
+
 def move_wacky():
     directions = [(0, 1),(1, 0),(1, 1),(-1, -1),(-1, 0),(0, -1),(1, -1),(-1, 1)]
     direction = random.choice(directions)
@@ -89,7 +90,7 @@ def move_wacky():
         if self.x - self.w / 2.0 < 0:
             self.x = self.w
             direction = random.choice(directions)
-            countdown = random.randint(1, 3)
+            countdown = random.randint(1, 5)
         elif self.x + self.w / 2.0 > globals.width - 1:
             self.x = globals.width - self.w / 2.0 - 1
             #self.x = globals.width - self.w

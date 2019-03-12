@@ -18,11 +18,12 @@ class Bullet:
                 self.kill()
             rect = (self.x - self.s / 2.0, self.y - self.s / 2.0, self.s, self.s)
             for target in targetlist:
-                targetrect = pygame.Rect(target.get_rect())
-                if targetrect.colliderect(rect):
-                    target.takedamage(1)
-                    self.kill()
-                    return
+                if target.alive == True:
+                    targetrect = pygame.Rect(target.get_rect())
+                    if targetrect.colliderect(rect):
+                        target.takedamage(1)
+                        self.kill()
+                        return
     def draw(self, surface):
         rect = (self.x - self.s / 2.0, self.y - self.s / 2.0, self.s, self.s)
         pygame.draw.rect(surface, (255, 0, 0), rect)

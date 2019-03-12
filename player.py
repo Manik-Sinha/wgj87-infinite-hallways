@@ -14,7 +14,7 @@ class Player:
         self.turret_end = (-1, -1)
         self.bullets = [Bullet() for _ in range(10)]
         self.next_bullet = 0
-        self.fire_rate = 0.5
+        self.fire_rate = 0.1
         self.fired_bullet = False
         self.fire_timer = 0
         self.sound_pew = pygame.mixer.Sound("pew.wav")

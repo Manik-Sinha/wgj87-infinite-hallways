@@ -1,5 +1,9 @@
 import pygame, math, pygame.freetype
 import globals
+from bullet import Bullet
+from player import Player
+from enemy import Enemy
+
 size = globals.width, globals.height
 pygame.init()
 
@@ -14,10 +18,6 @@ music.play()
 #    sys.exit()
 
 options = globals.options
-
-from bullet import Bullet
-from player import Player
-from enemy import Enemy
 
 player = Player()
 enemies = [Enemy() for _ in range(3)]
@@ -76,14 +76,14 @@ while not quit:
         player.update(up, down, left, right, dt, pygame.mouse.get_pos(), mouse_buttons, enemies)
 
         for enemy in enemies:
-            if enemy.alive:
+            if enemy.alive == True:
                 enemy.update(player.x, player.y, dt, [player])
         left = right = up = down = False
 
         screen.fill((0, 0, 0))
         player.draw(screen)
         for enemy in enemies:
-            if enemy.alive:
+            if enemy.alive == True:
                 enemy.draw(screen)
     else:
         screen.fill((0, 0, 0))
