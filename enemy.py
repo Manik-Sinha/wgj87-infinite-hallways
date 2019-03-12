@@ -74,7 +74,7 @@ import globals
 def move_wacky():
     directions = [(0, 1),(1, 0),(1, 1),(-1, -1),(-1, 0),(0, -1),(1, -1),(-1, 1)]
     direction = random.choice(directions)
-    countdown = 1
+    countdown = random.randint(1,3)
     def move(self, dt, player_x, player_y):
         original_x = self.x
         original_y = self.y
@@ -86,22 +86,22 @@ def move_wacky():
         if self.x - self.w / 2.0 < 0:
             self.x = self.w
             direction = random.choice(directions)
-            countdown = 2
+            countdown = random.randint(1, 3)
         elif self.x + self.w / 2.0 > globals.width - 1:
             self.x = globals.width - self.w / 2.0 - 1
             #self.x = globals.width - self.w
             direction = random.choice(directions)
-            countdown = 2
+            countdown = random.randint(1, 3)
         if self.y - self.h / 2.0 < 0:
             self.y = self.h
             direction = random.choice(directions)
-            countdown = 2
+            countdown = random.randint(1, 3)
         elif self.y + self.h / 2.0 > globals.height - 1:
             self.y = globals.height - self.h / 2.0 - 1
             #self.y = globals.height - self.h
             direction = random.choice(directions)
-            countdown = 2
+            countdown = random.randint(1, 3)
         if countdown <= 0:
             direction = random.choice(directions)
-            countdown = 2
+            countdown = random.randint(1, 3)
     return move
