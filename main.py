@@ -3,10 +3,9 @@ import globals
 from bullet import Bullet
 from player import Player
 from enemy import Enemy
-
+#import menu
 size = globals.width, globals.height
 pygame.init()
-
 screen = pygame.display.set_mode(size)
 pygame.mixer.init()
 
@@ -35,6 +34,8 @@ quit = False
 mouse_buttons = (False, False, False)
 
 pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+
+wall_frame = [1, 1, globals.width, globals.height]
 
 roboto_font = pygame.freetype.Font("fonts/Roboto-Regular.ttf", 20)
 while not quit:
@@ -81,6 +82,7 @@ while not quit:
 
         screen.fill((0, 0, 0))
         player.draw(screen)
+        pygame.draw.rect(screen, (255, 255, 255), wall_frame, 50)
         for enemy in enemies:
             if enemy.alive == True:
                 enemy.draw(screen)
@@ -94,4 +96,5 @@ while not quit:
                 enemy.hp = enemy.starthp
                 enemy.alive = True
             player.alive = True
+
     pygame.display.update()

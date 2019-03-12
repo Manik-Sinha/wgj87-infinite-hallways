@@ -58,13 +58,18 @@ class Player:
         if (left and up) or (left and down) or (right and up) or (right and down):
             speed = self.speed / self.sqrt2
         if left:
-            self.x = self.x - speed * dt
+            #50 is the thicknes of wall
+            if not self.x < 50:
+                self.x = self.x - speed * dt
         if right:
-            self.x = self.x + speed * dt
+            if not self.x > globals.width - 50:
+                self.x = self.x + speed * dt
         if up:
-            self.y = self.y - speed * dt
+            if not self.y < 50:
+                self.y = self.y - speed * dt
         if down:
-            self.y = self.y + speed * dt
+            if not self.y > globals.height - 50: 
+                self.y = self.y + speed * dt
     def update_turret(self, mouse_position):
         self.mx = mouse_position[0]
         self.my = mouse_position[1]
