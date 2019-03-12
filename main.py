@@ -20,7 +20,8 @@ from player import Player
 from enemy import Enemy
 
 player = Player()
-enemy1 = Enemy()
+enemies = [Enemy() for _ in range(3)]
+#enemy1 = Enemy()
 
 clock = pygame.time.Clock()
 dt = 0
@@ -69,12 +70,16 @@ while not quit:
     elif options["mute"] == False:
         pygame.mixer.unpause()
 
-    player.update(up, down, left, right, dt, pygame.mouse.get_pos(), mouse_buttons, [enemy1])
+    player.update(up, down, left, right, dt, pygame.mouse.get_pos(), mouse_buttons, enemies)
     #enemy1.update_turret(player.x, player.y)
-    enemy1.update(player.x, player.y, dt, [player])
+    for enemy in enemies:
+        if enemy.alive:
+            enemy.update(player.x, player.y, dt, [player])
     left = right = up = down = False
 
     screen.fill((0, 0, 0))
     player.draw(screen)
-    enemy1.draw(screen)
+    for enemy in enemies:
+        if enemy.alive:
+            enemy.draw(screen)
     pygame.display.update()

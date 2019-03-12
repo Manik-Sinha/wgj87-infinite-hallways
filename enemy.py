@@ -21,6 +21,7 @@ class Enemy:
         self.fire_timer = 0
         self.sound_pew = pygame.mixer.Sound("pew.wav")
         self.move_function = MethodType(move_wacky(), self)
+        self.alive = True
     def draw(self, surface):
         #Draw body.
         rect = (self.x - self.w / 2.0, self.y - self.h / 2.0, self.w, self.h)
@@ -67,6 +68,8 @@ class Enemy:
     def takedamage(self, amount):
         self.hp -= amount
         print("enemy hp: " + str(self.hp))
+        if self.hp <= 0:
+            self.alive = False
     def get_rect(self):
         return (self.x - self.w / 2.0, self.y - self.h / 2.0, self.w, self.h)
 
