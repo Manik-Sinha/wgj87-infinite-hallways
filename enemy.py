@@ -6,6 +6,7 @@ import random
 class Enemy:
     sqrt2 = math.sqrt(2)
     def __init__(self):
+        self.starthp = 5
         self.hp = 5
         self.x = self.y = self.w = self.h = 40
         self.player_x = self.x

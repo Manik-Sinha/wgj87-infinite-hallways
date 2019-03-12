@@ -4,7 +4,8 @@ import globals
 class Player:
     sqrt2 = math.sqrt(2)
     def __init__(self):
-        self.hp = 50
+        self.starthp = 30
+        self.hp = 30
         self.x = self.y = self.w = self.h = 50
         self.mx = self.x
         self.my = self.y

@@ -8,7 +8,6 @@ size = globals.width, globals.height
 pygame.init()
 
 screen = pygame.display.set_mode(size)
-
 pygame.mixer.init()
 
 music = pygame.mixer.Sound("monaco.ogg")
@@ -88,4 +87,11 @@ while not quit:
     else:
         screen.fill((0, 0, 0))
         roboto_font.render_to(screen, (globals.width / 2.0 - 30, globals.height / 2.0 - 10), "Game Over!", (255, 255, 255))
+        roboto_font.render_to(screen, (globals.width / 2.0 - 30, globals.height / 2.0 + 20), "Press R to restart !", (255, 255, 255))
+        if keys[pygame.K_r]:
+            player.hp = player.starthp
+            for enemy in enemies:
+                enemy.hp = enemy.starthp
+                enemy.alive = True
+            player.alive = True
     pygame.display.update()
