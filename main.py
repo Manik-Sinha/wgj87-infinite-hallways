@@ -1,4 +1,4 @@
-import pygame, math
+import pygame, math, pygame.freetype
 import globals
 size = globals.width, globals.height
 pygame.init()
@@ -36,6 +36,8 @@ quit = False
 mouse_buttons = (False, False, False)
 
 pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+
+roboto_font = pygame.freetype.Font("fonts/Roboto-Regular.ttf", 20)
 while not quit:
     dt = clock.tick() / 1000.0
     for event in pygame.event.get():
@@ -70,16 +72,20 @@ while not quit:
     elif options["mute"] == False:
         pygame.mixer.unpause()
 
-    player.update(up, down, left, right, dt, pygame.mouse.get_pos(), mouse_buttons, enemies)
-    #enemy1.update_turret(player.x, player.y)
-    for enemy in enemies:
-        if enemy.alive:
-            enemy.update(player.x, player.y, dt, [player])
-    left = right = up = down = False
+    if player.alive:
+        player.update(up, down, left, right, dt, pygame.mouse.get_pos(), mouse_buttons, enemies)
 
-    screen.fill((0, 0, 0))
-    player.draw(screen)
-    for enemy in enemies:
-        if enemy.alive:
-            enemy.draw(screen)
+        for enemy in enemies:
+            if enemy.alive:
+                enemy.update(player.x, player.y, dt, [player])
+        left = right = up = down = False
+
+        screen.fill((0, 0, 0))
+        player.draw(screen)
+        for enemy in enemies:
+            if enemy.alive:
+                enemy.draw(screen)
+    else:
+        screen.fill((0, 0, 0))
+        roboto_font.render_to(screen, (globals.width / 2.0 - 30, globals.height / 2.0 - 10), "Game Over!", (255, 255, 255))
     pygame.display.update()

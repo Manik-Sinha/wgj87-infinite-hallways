@@ -4,7 +4,7 @@ import globals
 class Player:
     sqrt2 = math.sqrt(2)
     def __init__(self):
-        self.hp = 10
+        self.hp = 50
         self.x = self.y = self.w = self.h = 50
         self.mx = self.x
         self.my = self.y
@@ -18,6 +18,7 @@ class Player:
         self.fired_bullet = False
         self.fire_timer = 0
         self.sound_pew = pygame.mixer.Sound("pew.wav")
+        self.alive = True
     def draw(self, surface):
         #Draw body.
         rect = (self.x - self.w / 2.0, self.y - self.h / 2.0, self.w, self.h)
@@ -75,5 +76,7 @@ class Player:
     def takedamage(self, amount):
         self.hp -= amount
         print("player hp: " + str(self.hp))
+        if self.hp <= 0:
+            self.alive = False
     def get_rect(self):
         return (self.x - self.w / 2.0, self.y - self.h / 2.0, self.w, self.h)
