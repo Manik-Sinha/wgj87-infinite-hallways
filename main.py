@@ -9,6 +9,7 @@ pygame.init()
 screen = pygame.display.set_mode(size)
 pygame.mixer.init()
 
+roboto_font = pygame.freetype.Font("fonts/Roboto-Regular.ttf", 20)
 music = pygame.mixer.Sound("monaco.ogg")
 music.play()
 #if pygame.mixer.get_init() is None:
@@ -20,6 +21,7 @@ options = globals.options
 player = Player()
 enemies = [Enemy() for _ in range(3)]
 #enemy1 = Enemy()
+
 
 clock = pygame.time.Clock()
 dt = 0
@@ -37,7 +39,6 @@ pygame.mouse.set_cursor(*pygame.cursors.broken_x)
 
 wall_frame = [1, 1, globals.width, globals.height]
 
-roboto_font = pygame.freetype.Font("fonts/Roboto-Regular.ttf", 20)
 while not quit:
     dt = clock.tick() / 1000.0
     for event in pygame.event.get():
@@ -83,6 +84,7 @@ while not quit:
         screen.fill((0, 0, 0))
         player.draw(screen)
         pygame.draw.rect(screen, (255, 255, 255), wall_frame, 50)
+        roboto_font.render_to(screen, (10, globals.height -20), "HP: "+str(player.hp), (10, 10, 10))
         for enemy in enemies:
             if enemy.alive == True:
                 enemy.draw(screen)

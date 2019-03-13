@@ -23,7 +23,7 @@ class Player:
     def draw(self, surface):
         #Draw body.
         rect = (self.x - self.w / 2.0, self.y - self.h / 2.0, self.w, self.h)
-        pygame.draw.rect(surface, (255, 255, 255), rect)
+        pygame.draw.rect(surface, (0, 191, 255), rect)
         #Draw turret.
         center = (self.x, self.y)
         end = self.turret_end
