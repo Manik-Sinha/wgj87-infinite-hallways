@@ -62,13 +62,13 @@ class Player:
             if not self.x < 50:
                 self.x = self.x - speed * dt
         if right:
-            if not self.x > globals.width - 50:
+            if not self.x > globals.width - 50 + 1:
                 self.x = self.x + speed * dt
         if up:
             if not self.y < 50:
                 self.y = self.y - speed * dt
         if down:
-            if not self.y > globals.height - 50: 
+            if not self.y > globals.height - 50 + 1:
                 self.y = self.y + speed * dt
     def update_turret(self, mouse_position):
         self.mx = mouse_position[0]
