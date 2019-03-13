@@ -8,7 +8,8 @@ class Enemy:
     def __init__(self):
         self.starthp = 5
         self.hp = 5
-        self.x = self.y = self.w = self.h = 40
+        self.x = self.y = 50
+        self.w = self.h = 40
         self.player_x = self.x
         self.player_y = self.y
         self.speed = 200
@@ -62,6 +63,9 @@ class Enemy:
         self.player_y = player_y
         self.turret_vector.x = self.player_x - self.x
         self.turret_vector.y = self.y - self.player_y
+        if self.turret_vector.x == 0 and self.turret_vector.y == 0:
+            self.turret_vector.x = 1
+            self.turret_vector.y = 1
         self.turret_vector.normalize_ip()
         vector = self.turret_vector
         length = self.turret_length
@@ -88,21 +92,22 @@ def move_wacky():
         countdown -= dt
         self.x = self.x + direction[0] * self.speed * dt
         self.y = self.y + direction[1] * self.speed * dt
-        if self.x - self.w / 2.0 < 0:
-            self.x = self.w
+        wallsize = 50
+        if self.x < wallsize - 3:
+            self.x = wallsize - 3
             direction = random.choice(directions)
-            countdown = random.randint(1, 5)
-        elif self.x + self.w / 2.0 > globals.width - 1:
-            self.x = globals.width - self.w / 2.0 - 1
+            countdown = random.randint(1, 3)
+        elif self.x > globals.width - wallsize + 6:
+            self.x = globals.width - wallsize + 6
             #self.x = globals.width - self.w
             direction = random.choice(directions)
             countdown = random.randint(1, 3)
-        if self.y - self.h / 2.0 < 0:
-            self.y = self.h
+        if self.y < wallsize - 3:
+            self.y = wallsize - 3
             direction = random.choice(directions)
             countdown = random.randint(1, 3)
-        elif self.y + self.h / 2.0 > globals.height - 1:
-            self.y = globals.height - self.h / 2.0 - 1
+        elif self.y > globals.height - wallsize + 6:
+            self.y = globals.height - wallsize + 6
             #self.y = globals.height - self.h
             direction = random.choice(directions)
             countdown = random.randint(1, 3)

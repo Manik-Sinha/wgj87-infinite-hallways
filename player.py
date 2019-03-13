@@ -5,7 +5,7 @@ class Player:
     sqrt2 = math.sqrt(2)
     def __init__(self):
         self.starthp = 30
-        self.hp = 30
+        self.hp = self.starthp
         self.x = self.y = self.w = self.h = 50
         self.mx = self.x
         self.my = self.y
